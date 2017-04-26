@@ -15,7 +15,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.files.storage import default_storage as storage
 from django.core.management import call_command
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext
 
 from celery.exceptions import SoftTimeLimitExceeded
 from celery.result import AsyncResult
@@ -341,7 +341,7 @@ def annotate_webext_incompatibilities(results, file_, addon, version_string,
     if is_webextension and not was_webextension:
         results['is_upgrade_to_webextension'] = True
 
-        msg = _('We allow and encourage an upgrade but you cannot reverse '
+        msg = ugettext('We allow and encourage an upgrade but you cannot reverse '
                 'this process. Once your users have the WebExtension '
                 'installed, they will not be able to install a legacy add-on.')
 
@@ -355,7 +355,7 @@ def annotate_webext_incompatibilities(results, file_, addon, version_string,
             'compatibility_type': None})
         results['warnings'] += 1
     elif was_webextension and not is_webextension:
-        msg = _('You cannot update a WebExtensions add-on with a legacy '
+        msg = ugettext('You cannot update a WebExtensions add-on with a legacy '
                 'add-on. Your users would not be able to use your new version '
                 'because Firefox does not support this type of update.')
 
@@ -660,13 +660,13 @@ def _fetch_content(url):
     try:
         return urllib2.urlopen(url, timeout=15)
     except urllib2.HTTPError, e:
-        raise Exception(_('%s responded with %s (%s).') % (url, e.code, e.msg))
+        raise Exception(ugettext('%s responded with %s (%s).') % (url, e.code, e.msg))
     except urllib2.URLError, e:
         # Unpack the URLError to try and find a useful message.
         if isinstance(e.reason, socket.timeout):
-            raise Exception(_('Connection to "%s" timed out.') % url)
+            raise Exception(ugettext('Connection to "%s" timed out.') % url)
         elif isinstance(e.reason, socket.gaierror):
-            raise Exception(_('Could not contact host at "%s".') % url)
+            raise Exception(ugettext('Could not contact host at "%s".') % url)
         else:
             raise Exception(str(e.reason))
 

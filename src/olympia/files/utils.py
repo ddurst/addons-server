@@ -22,7 +22,7 @@ from django.conf import settings
 from django.core.files.storage import (
     default_storage as storage, File as DjangoFile)
 from django.utils.jslex import JsLexer
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext
 
 import flufl.lock
 import rdflib
