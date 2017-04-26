@@ -323,7 +323,7 @@ class Addon(OnChangeMixin, ModelBase):
     suggested_amount = models.DecimalField(
         max_digits=9, decimal_places=2, blank=True,
         null=True, help_text=_(u'Users have the option of contributing more '
-                               'or less than this amount.'))
+                               u'or less than this amount.'))
 
     total_contributions = models.DecimalField(max_digits=9, decimal_places=2,
                                               blank=True, null=True)
