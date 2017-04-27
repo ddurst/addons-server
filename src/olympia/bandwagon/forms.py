@@ -198,9 +198,9 @@ class CollectionForm(happyforms.ModelForm):
                 ugettext('Icons must be either PNG or JPG.'))
 
         if icon.size > settings.MAX_ICON_UPLOAD_SIZE:
+            size_in_mb = settings.MAX_ICON_UPLOAD_SIZE / 1024 / 1024 - 1
             raise forms.ValidationError(
-                ugettext('Please use images smaller than %dMB.') %
-                         (settings.MAX_ICON_UPLOAD_SIZE / 1024 / 1024 - 1))
+                ugettext('Please use images smaller than %dMB.') % size_in_mb)
         return icon
 
     def save(self, default_locale=None):
