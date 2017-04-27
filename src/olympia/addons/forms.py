@@ -41,10 +41,8 @@ def clean_addon_slug(slug, instance):
 
     if slug != instance.slug:
         if Addon.objects.filter(slug=slug).exists():
-            msg = ugettext(
-                u'This slug is already in use. Please choose another.')
-            raise forms.ValidationError(
-                )
+            raise forms.ValidationError(ugettext(
+                u'This slug is already in use. Please choose another.'))
         if DeniedSlug.blocked(slug):
             raise forms.ValidationError(ugettext(
                 u'The slug cannot be "%(slug)s". Please choose another.'
@@ -91,8 +89,9 @@ def clean_tags(request, tags):
 
     if any(t for t in target if len(t) > max_len):
         raise forms.ValidationError(
-            ugettext('All tags must be %s characters or less after invalid characters'
-              ' are removed.' % max_len))
+            ugettext(
+                'All tags must be %s characters or less after invalid '
+                'characters are removed.' % max_len))
 
     if any(t for t in target if len(t) < min_len):
         msg = ungettext("All tags must be at least {0} character.",
@@ -213,9 +212,9 @@ class CategoryForm(forms.Form):
         max_cat = amo.MAX_CATEGORIES
 
         if getattr(self, 'disabled', False) and total:
-            raise forms.ValidationError(
-                ugettext('Categories cannot be changed while your add-on is featured '
-                  'for this application.'))
+            raise forms.ValidationError(ugettext(
+                'Categories cannot be changed while your add-on is featured '
+                'for this application.'))
         if total > max_cat:
             # L10n: {0} is the number of categories.
             raise forms.ValidationError(ungettext(
@@ -225,9 +224,9 @@ class CategoryForm(forms.Form):
 
         has_misc = filter(lambda x: x.misc, categories)
         if has_misc and total > 1:
-            raise forms.ValidationError(
-                ugettext('The miscellaneous category cannot be combined with '
-                  'additional categories.'))
+            raise forms.ValidationError(ugettext(
+                'The miscellaneous category cannot be combined with '
+                'additional categories.'))
 
         return categories
 
@@ -350,10 +349,10 @@ class AddonFormDetails(AddonFormBase):
             if 'description' in missing and locale in data['description']:
                 missing.remove('description')
             if missing:
-                raise forms.ValidationError(
-                    ugettext('Before changing your default locale you must have a '
-                      'name, summary, and description in that locale. '
-                      'You are missing %s.') % ', '.join(map(repr, missing)))
+                raise forms.ValidationError(ugettext(
+                    'Before changing your default locale you must have a '
+                    'name, summary, and description in that locale. '
+                    'You are missing %s.') % ', '.join(map(repr, missing)))
         return data
 
 

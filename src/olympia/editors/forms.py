@@ -293,9 +293,9 @@ class ReviewForm(happyforms.Form):
                                    label=_(u'Applications:'))
     notify = forms.BooleanField(required=False,
                                 label=_(u'Notify me the next time this '
-                                            'add-on is updated. (Subsequent '
-                                            'updates will not generate an '
-                                            'email)'))
+                                        u'add-on is updated. (Subsequent '
+                                        u'updates will not generate an '
+                                        u'email)'))
     adminflag = forms.BooleanField(required=False,
                                    label=_(u'Clear Admin Review Flag'))
     clear_info_request = forms.BooleanField(

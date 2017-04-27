@@ -155,7 +155,8 @@ class SearchToolsRss(AddonFeedMixin, NonAtomicFeed):
         """Description of this feed."""
         if self.category:
             # L10n: %s is a category name.
-            return ugettext(u'Search tools relating to %s') % self.category.name
+            return ugettext(
+                u'Search tools relating to %s') % self.category.name
         elif self.show_featured:
             return ugettext('Search tools and search-related extensions')
         else:

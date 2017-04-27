@@ -107,10 +107,10 @@ def summarize_validation(validation):
     """Readable summary of add-on validation results."""
     # L10n: first parameter is the number of errors
     errors = ungettext('{0} error', '{0} errors',
-                      validation.errors).format(validation.errors)
+                       validation.errors).format(validation.errors)
     # L10n: first parameter is the number of warnings
     warnings = ungettext('{0} warning', '{0} warnings',
-                        validation.warnings).format(validation.warnings)
+                         validation.warnings).format(validation.warnings)
     return "%s, %s" % (errors, warnings)
 
 

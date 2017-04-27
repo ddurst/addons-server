@@ -320,14 +320,16 @@ def edit_theme(request, addon_id, addon, theme=False):
         if 'owner_submit' in request.POST:
             if owner_form.is_valid():
                 owner_form.save()
-                messages.success(request, ugettext('Changes successfully saved.'))
+                messages.success(
+                    request, ugettext('Changes successfully saved.'))
                 return redirect('devhub.themes.edit', addon.slug)
         elif form.is_valid():
             form.save()
             messages.success(request, ugettext('Changes successfully saved.'))
             return redirect('devhub.themes.edit', addon.reload().slug)
         else:
-            messages.error(request, ugettext('Please check the form for errors.'))
+            messages.error(
+                request, ugettext('Please check the form for errors.'))
 
     return render(request, 'devhub/personas/edit.html', {
         'addon': addon, 'persona': addon.persona, 'form': form,
@@ -339,7 +341,8 @@ def edit_theme(request, addon_id, addon, theme=False):
 def delete(request, addon_id, addon, theme=False):
     # Database deletes only allowed for free or incomplete addons.
     if not addon.can_be_deleted():
-        msg = ugettext('Add-on cannot be deleted. Disable this add-on instead.')
+        msg = ugettext(
+            'Add-on cannot be deleted. Disable this add-on instead.')
         messages.error(request, msg)
         return redirect(addon.get_dev_url('versions'))
 
@@ -349,7 +352,8 @@ def delete(request, addon_id, addon, theme=False):
         addon.delete(msg='Removed via devhub', reason=reason)
         messages.success(
             request,
-            ugettext('Theme deleted.') if theme else ugettext('Add-on deleted.'))
+            ugettext('Theme deleted.')
+            if theme else ugettext('Add-on deleted.'))
         return redirect('devhub.%s' % ('themes' if theme else 'addons'))
     else:
         if theme:
@@ -453,9 +457,10 @@ def ownership(request, addon_id, addon):
                     recipients=authors_emails)
             elif author.role != author._original_role:
                 action = amo.LOG.CHANGE_USER_WITH_ROLE
+                title = ugettext('An author has a role changed on your add-on')
                 mail_user_changes(
                     author=author,
-                    title=ugettext('An author has a role changed on your add-on'),
+                    title=title,
                     template_part='author_changed',
                     recipients=authors_emails)
 
@@ -513,13 +518,15 @@ def payments(request, addon_id, addon):
                     profile_form.save()
             if valid:
                 addon.save()
-                messages.success(request, ugettext('Changes successfully saved.'))
+                messages.success(
+                    request, ugettext('Changes successfully saved.'))
                 ActivityLog.create(amo.LOG.EDIT_CONTRIBUTIONS, addon)
 
                 return redirect(addon.get_dev_url('payments'))
     errors = charity_form.errors or contrib_form.errors or profile_form.errors
     if errors:
-        messages.error(request, ugettext('There were errors in your submission.'))
+        messages.error(
+            request, ugettext('There were errors in your submission.'))
 
     return render(request, 'devhub/payments/payments.html',
                   dict(addon=addon, errors=errors, charity_form=charity_form,
@@ -772,8 +779,8 @@ def json_upload_detail(request, upload, addon_slug=None):
             if not addon and not system_addon_submission_allowed(
                     request.user, pkg):
                 raise django_forms.ValidationError(
-                    ugettext(u'You cannot submit an add-on with a guid ending '
-                      u'"@mozilla.org"'))
+                    ugettext(u'You cannot submit an add-on with a guid '
+                             u'ending "@mozilla.org"'))
         except django_forms.ValidationError, exc:
             errors_before = result['validation'].get('errors', 0)
             # FIXME: This doesn't guard against client-side
@@ -1037,11 +1044,13 @@ def ajax_upload_image(request, upload_type, addon_id=None):
 
         if max_size and upload_preview.size > max_size:
             if is_icon:
-                errors.append(ugettext('Please use images smaller than %dMB.') % (
-                    max_size / 1024 / 1024 - 1))
+                errors.append(
+                    ugettext('Please use images smaller than %dMB.')
+                    % (max_size / 1024 / 1024 - 1))
             if is_persona:
-                errors.append(ugettext('Images cannot be larger than %dKB.') % (
-                    max_size / 1024))
+                errors.append(
+                    ugettext('Images cannot be larger than %dKB.')
+                    % (max_size / 1024))
 
         if check.is_image() and is_persona:
             persona, img_type = upload_type.split('_')  # 'header' or 'footer'
@@ -1050,8 +1059,8 @@ def ajax_upload_image(request, upload_type, addon_id=None):
                 actual_size = Image.open(fp).size
             if actual_size != expected_size:
                 # L10n: {0} is an image width (in pixels), {1} is a height.
-                errors.append(ugettext('Image must be exactly {0} pixels wide '
-                                'and {1} pixels tall.')
+                errors.append(ugettext('Image must be exactly {0} pixels '
+                                       'wide and {1} pixels tall.')
                               .format(expected_size[0], expected_size[1]))
         if errors and upload_type == 'preview' and os.path.exists(loc):
             # Delete the temporary preview file in case of error.
@@ -1167,11 +1176,15 @@ def version_delete(request, addon_id, addon):
     version_id = request.POST.get('version_id')
     version = get_object_or_404(Version.objects, pk=version_id, addon=addon)
     if 'disable_version' in request.POST:
-        messages.success(request, ugettext('Version %s disabled.') % version.version)
+        messages.success(
+            request,
+            ugettext('Version %s disabled.') % version.version)
         version.is_user_disabled = True
         version.addon.update_status()
     else:
-        messages.success(request, ugettext('Version %s deleted.') % version.version)
+        messages.success(
+            request,
+            ugettext('Version %s deleted.') % version.version)
         version.delete()
     return redirect(addon.get_dev_url('versions'))
 
@@ -1182,7 +1195,9 @@ def version_delete(request, addon_id, addon):
 def version_reenable(request, addon_id, addon):
     version_id = request.POST.get('version_id')
     version = get_object_or_404(Version.objects, pk=version_id, addon=addon)
-    messages.success(request, ugettext('Version %s re-enabled.') % version.version)
+    messages.success(
+        request,
+        ugettext('Version %s re-enabled.') % version.version)
     version.is_user_disabled = False
     version.addon.update_status()
     return redirect(addon.get_dev_url('versions'))
@@ -1191,11 +1206,13 @@ def version_reenable(request, addon_id, addon):
 def check_validation_override(request, form, addon, version):
     if version and form.cleaned_data.get('admin_override_validation'):
         helper = ReviewHelper(request=request, addon=addon, version=version)
-        helper.set_data(
-            dict(operating_systems='', applications='',
-                 comments=ugettext(u'This upload has failed validation, and may '
-                            u'lack complete validation results. Please '
-                            u'take due care when reviewing it.')))
+        helper.set_data({
+            'operating_systems': '',
+            'applications': '',
+            'comments': ugettext(
+                u'This upload has failed validation, and may '
+                u'lack complete validation results. Please '
+                u'take due care when reviewing it.')})
         helper.actions['super']['method']()
 
 
@@ -1591,7 +1608,9 @@ def submit_theme(request):
         else:
             # Stored unsaved data in request.session since it gets lost on
             # second invalid POST.
-            messages.error(request, ugettext('Please check the form for errors.'))
+            messages.error(
+                request,
+                ugettext('Please check the form for errors.'))
             request.session['unsaved_data'] = data['unsaved_data']
 
     return render(request, 'devhub/personas/submit.html', dict(form=form))
@@ -1729,7 +1748,8 @@ def api_key(request):
         log.info('revoking JWT key for user: {}, {}'
                  .format(request.user.id, credentials))
         send_key_revoked_email(request.user.email, credentials.key)
-        msg = ugettext('Your old credentials were revoked and are no longer valid.')
+        msg = ugettext(
+            'Your old credentials were revoked and are no longer valid.')
         messages.success(request, msg)
         return redirect(reverse('devhub.api_key'))
 

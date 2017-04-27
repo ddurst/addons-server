@@ -456,9 +456,8 @@ class SafeUnzip(object):
                 log.error('Extraction error, invalid file name (%s) in '
                           'archive: %s' % (info.filename, self.source))
                 # L10n: {0} is the name of the invalid file.
-                raise forms.ValidationError(
-                    ugettext('Invalid file name in archive: {0}').format(
-                             info.filename))
+                msg = ugettext('Invalid file name in archive: {0}')
+                raise forms.ValidationError(msg.format(info.filename))
 
             if info.file_size > settings.FILE_UNZIP_SIZE_LIMIT:
                 log.error('Extraction error, file too big (%s) for file (%s): '
@@ -716,7 +715,7 @@ def check_xpi_info(xpi_info, addon=None):
     if not VERSION_RE.match(xpi_info['version']):
         raise forms.ValidationError(
             ugettext('Version numbers should only contain letters, numbers, '
-              'and these punctuation characters: +*.-_.'))
+                     'and these punctuation characters: +*.-_.'))
 
     if is_webextension and xpi_info.get('is_static_theme', False):
         if not waffle.switch_is_active('allow-static-theme-uploads'):

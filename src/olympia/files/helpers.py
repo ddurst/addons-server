@@ -254,9 +254,9 @@ class FileViewer(object):
         if self.selected:
             binary = self.selected['binary']
             if binary and (binary != 'image'):
-                self.selected['msg'] = ugettext('This file is not viewable online. '
-                                         'Please download the file to view '
-                                         'the contents.')
+                self.selected['msg'] = ugettext(
+                    u'This file is not viewable online. Please download the '
+                    u'file to view the contents.')
             return binary
 
     def is_directory(self):

@@ -364,8 +364,8 @@ class Version(OnChangeMixin, ModelBase):
             reasons.append(ugettext('Add-on uses binary components.'))
         if self.files.filter(strict_compatibility=True).exists():
             compat = False
-            reasons.append(ugettext('Add-on has opted into strict compatibility '
-                             'checking.'))
+            reasons.append(ugettext(
+                'Add-on has opted into strict compatibility checking.'))
         return (compat, reasons)
 
     def is_compatible_app(self, app):
@@ -407,8 +407,9 @@ class Version(OnChangeMixin, ModelBase):
 
     @property
     def status(self):
-        return [f.STATUS_CHOICES.get(f.status, ugettext('[status:%s]') % f.status)
-                for f in self.all_files]
+        return [
+            f.STATUS_CHOICES.get(f.status, ugettext('[status:%s]') % f.status)
+            for f in self.all_files]
 
     @property
     def statuses(self):

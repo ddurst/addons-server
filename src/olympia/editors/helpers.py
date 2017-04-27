@@ -57,7 +57,8 @@ def file_review_status(addon, file):
         # unreviewed.  Especially for versions.
         else:
             return ugettext(u'Rejected or Unreviewed')
-    return file.STATUS_CHOICES.get(file.status, ugettext('[status:%s]') % file.status)
+    return file.STATUS_CHOICES.get(
+        file.status, ugettext('[status:%s]') % file.status)
 
 
 @register.function
@@ -93,30 +94,32 @@ def queue_tabnav(context):
     if listed:
         tabnav = [('nominated', 'queue_nominated',
                    (ungettext('New Add-on ({0})',
-                             'New Add-ons ({0})',
-                             counts['nominated'])
+                              'New Add-ons ({0})',
+                              counts['nominated'])
                     .format(counts['nominated']))),
                   ('pending', 'queue_pending',
                    (ungettext('Update ({0})',
-                             'Updates ({0})',
-                             counts['pending'])
+                              'Updates ({0})',
+                              counts['pending'])
                     .format(counts['pending']))),
                   ('moderated', 'queue_moderated',
                    (ungettext('Moderated Review ({0})',
-                             'Moderated Reviews ({0})',
-                             counts['moderated'])
+                              'Moderated Reviews ({0})',
+                              counts['moderated'])
                     .format(counts['moderated'])))]
 
         if acl.action_allowed(request, amo.permissions.ADDONS_POST_REVIEW):
             tabnav.append(
                 ('auto_approved', 'queue_auto_approved',
                  (ungettext('Auto Approved Add-on ({0})',
-                           'Auto Approved Add-ons ({0})',
-                           counts['auto_approved'])
+                            'Auto Approved Add-ons ({0})',
+                            counts['auto_approved'])
                   .format(counts['auto_approved']))),
             )
     else:
-        tabnav = [('all', 'unlisted_queue_all', ugettext('All Unlisted Add-ons'))]
+        tabnav = [
+            ('all', 'unlisted_queue_all', ugettext('All Unlisted Add-ons'))
+        ]
 
     return tabnav
 
@@ -420,36 +423,36 @@ class ReviewHelper(object):
                 'method': self.handler.process_public,
                 'minimal': False,
                 'details': _('This will approve, sign, and publish this '
-                                 'version. The comments will be sent to the '
-                                 'developer.'),
+                             'version. The comments will be sent to the '
+                             'developer.'),
                 'label': _('Approve')}
             actions['reject'] = {
                 'method': self.handler.process_sandbox,
                 'label': _('Reject'),
                 'details': _('This will reject this version and remove it '
-                                 'from the queue. The comments will be sent '
-                                 'to the developer.'),
+                             'from the queue. The comments will be sent '
+                             'to the developer.'),
                 'minimal': False}
         if self.version:
             actions['info'] = {
                 'method': self.handler.request_information,
                 'label': _('Reviewer reply'),
                 'details': _('This will send a message to the developer. '
-                                 'You will be notified when they reply.'),
+                             'You will be notified when they reply.'),
                 'minimal': True}
         actions['super'] = {
             'method': self.handler.process_super_review,
             'label': _('Request super-review'),
             'details': _('If you have concerns about this add-on that an '
-                             'admin reviewer should look into, enter your '
-                             'comments in the area below. They will not be '
-                             'sent to the developer.'),
+                         'admin reviewer should look into, enter your '
+                         'comments in the area below. They will not be '
+                         'sent to the developer.'),
             'minimal': True}
         actions['comment'] = {
             'method': self.handler.process_comment,
             'label': _('Comment'),
             'details': _('Make a comment on this version. The developer '
-                             'won\'t be able to see this.'),
+                         'won\'t be able to see this.'),
             'minimal': True}
 
         return actions
@@ -762,7 +765,9 @@ def queue_tabnav_themes(context):
     if acl.action_allowed(context['request'],
                           amo.permissions.THEME_ADMIN_TOOLS_VIEW):
         tabs.append((
-            'editors.themes.list_flagged', 'flagged_themes', ugettext('Flagged'),
+            'editors.themes.list_flagged',
+            'flagged_themes',
+            ugettext('Flagged'),
         ))
         tabs.append((
             'editors.themes.list_rereview', 'rereview_themes',

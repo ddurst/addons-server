@@ -522,8 +522,10 @@ def queue_moderated(request):
             reviews_formset.save()
         else:
             amo.messages.error(
-                request, ' '.join(e.as_text() or ugettext('An unknown error occurred')
-                                  for e in reviews_formset.errors))
+                request,
+                ' '.join(
+                    e.as_text() or ugettext('An unknown error occurred')
+                    for e in reviews_formset.errors))
         return redirect(reverse('editors.queue_moderated'))
 
     return render(request, 'editors/queue.html',
@@ -628,7 +630,8 @@ def review(request, addon, channel=None):
         channel=channel, exclude=(amo.STATUS_BETA,))
 
     if not settings.ALLOW_SELF_REVIEWS and addon.has_author(request.user):
-        amo.messages.warning(request, ugettext('Self-reviews are not allowed.'))
+        amo.messages.warning(
+            request, ugettext('Self-reviews are not allowed.'))
         return redirect(reverse('editors.queue'))
 
     form_helper = ReviewHelper(request=request, addon=addon, version=version)
@@ -657,7 +660,8 @@ def review(request, addon, channel=None):
                                                      addon=addon)
         if form.cleaned_data.get('adminflag') and is_admin:
             addon.update(admin_review=False)
-        amo.messages.success(request, ugettext('Review successfully processed.'))
+        amo.messages.success(
+            request, ugettext('Review successfully processed.'))
         clear_reviewing_cache(addon.id)
         return redirect(redirect_url)
 

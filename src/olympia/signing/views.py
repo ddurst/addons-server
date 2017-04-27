@@ -138,14 +138,14 @@ class VersionView(APIView):
                 request.user, pkg):
             raise forms.ValidationError(
                 ugettext(u'You cannot submit an add-on with a guid ending '
-                  u'"@mozilla.org"'),
+                         u'"@mozilla.org"'),
                 status.HTTP_400_BAD_REQUEST)
 
         if addon is not None and addon.status == amo.STATUS_DISABLED:
-            raise forms.ValidationError(
-                ugettext('You cannot add versions to an addon that has status: %s.' %
-                  amo.STATUS_CHOICES_ADDON[amo.STATUS_DISABLED]),
-                status.HTTP_400_BAD_REQUEST)
+            msg = ugettext(
+                'You cannot add versions to an addon that has status: %s.'
+                % amo.STATUS_CHOICES_ADDON[amo.STATUS_DISABLED])
+            raise forms.ValidationError(msg, status.HTTP_400_BAD_REQUEST)
 
         version_string = version_string or pkg['version']
 
@@ -177,7 +177,8 @@ class VersionView(APIView):
             # first, validate it properly.
             if not amo.ADDON_GUID_PATTERN.match(guid):
                 raise forms.ValidationError(
-                    ugettext('Invalid GUID in URL'), status.HTTP_400_BAD_REQUEST)
+                    ugettext('Invalid GUID in URL'),
+                    status.HTTP_400_BAD_REQUEST)
             pkg['guid'] = guid
 
         # channel will be ignored for new addons.
@@ -203,8 +204,8 @@ class VersionView(APIView):
                     has_listed_versions=will_have_listed):
                 raise forms.ValidationError(
                     ugettext('You cannot add a listed version to this addon '
-                      'via the API due to missing metadata. '
-                      'Please submit via the website'),
+                             'via the API due to missing metadata. '
+                             'Please submit via the website'),
                     status.HTTP_400_BAD_REQUEST)
 
         file_upload = handle_upload(
@@ -232,9 +233,8 @@ class VersionView(APIView):
                              addon=addon, version=version_string, uuid=uuid,
                              file_upload=file_upload))
         except FileUpload.DoesNotExist:
-            return Response(
-                {'error': ugettext('No uploaded file for that addon and version.')},
-                status=status.HTTP_404_NOT_FOUND)
+            msg = ugettext('No uploaded file for that addon and version.')
+            return Response({'error': msg}, status=status.HTTP_404_NOT_FOUND)
 
         try:
             version = addon.versions.filter(version=version_string).latest()
