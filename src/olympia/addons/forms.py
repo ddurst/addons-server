@@ -44,9 +44,9 @@ def clean_addon_slug(slug, instance):
             raise forms.ValidationError(ugettext(
                 u'This slug is already in use. Please choose another.'))
         if DeniedSlug.blocked(slug):
-            raise forms.ValidationError(ugettext(
-                u'The slug cannot be "%(slug)s". Please choose another.'
-                % slug))
+            msg = ugettext(u'The slug cannot be "%(slug)s". '
+                           u'Please choose another.')
+            raise forms.ValidationError(msg % {'slug': slug})
 
     return slug
 
